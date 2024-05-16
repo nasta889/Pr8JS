@@ -1,0 +1,129 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Список справ</title>
+<style>
+/* Стилізація списку справ */
+#todo-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+/* Стилізація елементів списку справ */
+#todo-list li {
+    margin-bottom: 10px;
+}
+
+/* Стилізація виконаних справ */
+.completed {
+    text-decoration: line-through;
+    color: green;
+}
+
+/* Стилізація лічильників */
+#counter-container {
+    margin-top: 20px;
+}
+
+/* Стилізація кнопки додавання нової справи */
+#new-todo-btn {
+    display: block;
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#new-todo-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Стилізація кнопки видалення справи */
+.delete-button {
+    color: white;
+    background-color: red;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.delete-button:hover {
+    background-color: darkred;
+}
+</style>
+</head>
+<body>
+<div>
+    <h1>Список справ</h1>
+    <button id="new-todo-btn" onclick="newTodo()">Додати нову справу</button>
+    <ul id="todo-list">
+        <!-- Сюди будуть додаватися елементи списку справ за допомогою JavaScript -->
+    </ul>
+    <div id="counter-container">
+        Загальна кількість справ: <span id="item-count">0</span><br>
+        Кількість невиконаних справ: <span id="unchecked-count">0</span>
+    </div>
+</div>
+<script>
+// JavaScript код для додавання справ, видалення справ, відображення списку та оновлення лічильників
+
+const itemCountSpan = document.getElementById('item-count');
+const uncheckedCountSpan = document.getElementById('unchecked-count');
+
+let todos = [];
+
+function newTodo() {
+    let todoText = prompt("Введіть нову справу:");
+    addTodo(todoText);
+}
+
+function addTodo(todoText) {
+    let newTodoItem = {
+        text: todoText,
+        completed: false
+    };
+    todos.push(newTodoItem);
+    render();
+    updateCounter();
+}
+
+function renderTodo(todo) {
+    let todoHTML = `<li class="${todo.completed ? 'completed' : ''}"><input type="checkbox" ${todo.completed ? 'checked' : ''} onchange="checkTodo(${todos.indexOf(todo)})"><label>${todo.text}</label> <button onclick="deleteTodo(${todos.indexOf(todo)})" class="delete-button">Видалити</button></li>`;
+    return todoHTML;
+}
+
+function render() {
+    const list = document.getElementById('todo-list');
+    list.innerHTML = '';
+    todos.forEach(todo => {
+        list.insertAdjacentHTML('beforeend', renderTodo(todo));
+    });
+}
+
+function updateCounter() {
+    itemCountSpan.textContent = todos.length;
+    let uncheckedCount = todos.filter(todo => !todo.completed).length;
+    uncheckedCountSpan.textContent = uncheckedCount;
+}
+
+function checkTodo(index) {
+    todos[index].completed = !todos[index].completed;
+    render();
+    updateCounter();
+}
+
+function deleteTodo(index) {
+    todos.splice(index, 1);
+    render();
+    updateCounter();
+}
+</script>
+</body>
+</html>
